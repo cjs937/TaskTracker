@@ -8,7 +8,7 @@ interface TaskItemProps {
 }
 
 export function TaskItem({ task }: TaskItemProps) {
-  const [ismodalOpen, setModalOpen] = useState(false);
+  const [isModalOpen, setModalOpen] = useState(false);
 
   return (
     <>
@@ -18,7 +18,7 @@ export function TaskItem({ task }: TaskItemProps) {
       
       <TaskModal 
         taskItem={task} 
-        show={ismodalOpen}
+        show={isModalOpen}
         onHide={() => { 
           console.log("Closing Modal");
           setModalOpen(false)}
