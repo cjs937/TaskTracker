@@ -1,6 +1,6 @@
 import type { Task } from '../types';
 import {TaskModal} from './TaskModal'
-import styles from './TaskItem.module.css';
+//import styles from './TaskItem.module.css';
 import { useState } from 'react';
 
 interface TaskItemProps {
@@ -20,7 +20,6 @@ export function TaskItem({ task }: TaskItemProps) {
         taskItem={task} 
         show={isModalOpen}
         onHide={() => { 
-          console.log("Closing Modal");
           setModalOpen(false)}
         }
       />

@@ -1,23 +1,33 @@
 import { Modal } from "react-bootstrap";
-import type { Task  as TaskType } from "../types";
+import type { Task } from "../types";
 import styles from "./TaskModal.module.css"
 
 interface TaskModalProps {
-    taskItem: TaskType;
+    taskItem: Task;
     show: boolean;
     onHide: () => void;
 }
 
 export function TaskModal({taskItem, show, onHide}:TaskModalProps) 
 {
-    console.log("Opened Modal: " + taskItem.title);
     return(
-        <Modal show={show} onHide={onHide}>
-            <Modal.Header closeButton>
-                <Modal.Title>TestHeader</Modal.Title>
+        <Modal show={show} onHide={onHide} size="lg">
+            <Modal.Header closeButton className={styles.modalHeader}>
+                <Modal.Title className={styles.pill}>{taskItem.title}</Modal.Title>
+                <div className={styles.pillRowGapped}>
+                    <div className={styles.pill}>{taskItem.priority}</div>
+                    <div className={styles.pill}>{taskItem.createdAt.toDateString()}</div>
+                </div>
             </Modal.Header>
-            <Modal.Body>TestBody</Modal.Body>
-            <Modal.Footer>TestFooter</Modal.Footer>
+            <Modal.Body>
+            <input className={styles.inputBox} type="text" defaultValue={taskItem.description}></input>
+            </Modal.Body>
+            <Modal.Footer>
+                <div className={styles.pillRowGapped}>
+                    <div className={styles.pill}>Tags</div>
+                    <div className={styles.pill}>Delete</div>
+                </div>
+            </Modal.Footer>
         </Modal>
     );
 }
