@@ -1,6 +1,6 @@
 import type { Task } from '../types';
 import {TaskModal} from './TaskModal'
-//import styles from './TaskItem.module.css';
+//import styles from './modules/TaskItem.module.css';
 import { useState } from 'react';
 
 interface TaskItemProps {

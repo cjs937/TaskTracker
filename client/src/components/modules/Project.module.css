@@ -1,0 +1,11 @@
+.taskListRow {
+    display: flex;
+    flex-direction: row;
+    margin-top: 20px;
+}
+
+.projectFooter {
+    display: flex;
+    flex-direction: row;
+    gap: 80%;
+}

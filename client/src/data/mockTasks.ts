@@ -1,4 +1,4 @@
-import type { Task, TaskList } from '../types';
+import type { Task, TaskList, Project } from '../types';
 
 export const mockTasks: Task[] = [
   {
@@ -29,9 +29,35 @@ export const mockTasks: Task[] = [
   },
 ];
 
+export const mockTasks2: Task[] = [
+  {
+    id: '1',
+    title: 'Make more task lists',
+    description: 'We need more tasks',
+    completed: false,
+    priority: 'high',
+    dueDate: new Date('2026-07-01'),
+    createdAt: new Date('2026-06-20'),
+  }
+];
+
 export const mockTaskList: TaskList = {
   id: 'list-1',
   name: 'My Tasks',
   tasks: mockTasks,
   createdAt: new Date('2026-06-22'),
 };
+
+export const mockTaskList2: TaskList = {
+  id: 'list-2',
+  name: 'Another Task List',
+  tasks: mockTasks2,
+  createdAt: new Date('2026-06-22'),
+};
+
+export const mockProject: Project = {
+  id: 'project-1',
+  name: 'My Project',
+  taskLists: [mockTaskList, mockTaskList2],
+  tags: ['tag1', 'tag2']
+}

@@ -1,6 +1,7 @@
 import { useState } from 'react'
-import { mockTaskList } from './data/mockTasks'
+import { mockProject, mockTaskList } from './data/mockTasks'
 import { TaskList } from './components/TaskList'
+import { Project } from './components/Project'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import './App.css'
 
@@ -9,7 +10,10 @@ function App() {
 
   return (
     <>
-      <TaskList key={mockTaskList.id} taskList={mockTaskList} />
+      {
+        <Project key={mockProject.id} project={mockProject} />
+        /* <TaskList key={mockTaskList.id} taskList={mockTaskList} /> */
+      }
     </>
   )
 }

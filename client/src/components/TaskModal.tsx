@@ -1,6 +1,6 @@
 import { Modal } from "react-bootstrap";
 import type { Task } from "../types";
-import styles from "./TaskModal.module.css"
+import styles from "./modules/TaskModal.module.css"
 
 interface TaskModalProps {
     taskItem: Task;
@@ -13,10 +13,10 @@ export function TaskModal({taskItem, show, onHide}:TaskModalProps)
     return(
         <Modal show={show} onHide={onHide} size="lg">
             <Modal.Header closeButton className={styles.modalHeader}>
-                <Modal.Title className={styles.pill}>{taskItem.title}</Modal.Title>
+                <Modal.Title className="pill">{taskItem.title}</Modal.Title>
                 <div className={styles.pillRowGapped}>
-                    <div className={styles.pill}>{taskItem.priority}</div>
-                    <div className={styles.pill}>{taskItem.createdAt.toDateString()}</div>
+                    <div className="pill">{taskItem.priority}</div>
+                    <div className="pill">{taskItem.createdAt.toDateString()}</div>
                 </div>
             </Modal.Header>
             <Modal.Body>
@@ -24,8 +24,8 @@ export function TaskModal({taskItem, show, onHide}:TaskModalProps)
             </Modal.Body>
             <Modal.Footer>
                 <div className={styles.pillRowGapped}>
-                    <div className={styles.pill}>Tags</div>
-                    <div className={styles.pill}>Delete</div>
+                    <div className="pill">Tags</div>
+                    <div className="pill">Delete</div>
                 </div>
             </Modal.Footer>
         </Modal>

@@ -14,3 +14,10 @@ export interface TaskList {
   tasks: Task[];
   createdAt: Date;
 }
+
+export interface Project {
+  id: string;
+  name: string;
+  taskLists: TaskList[];
+  tags: string[];
+}

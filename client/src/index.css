@@ -109,3 +109,13 @@ code {
   padding: 4px 8px;
   background: var(--code-bg);
 }
+
+.pill {
+    background-color: grey;
+    border-style: solid;
+    border-color: black;
+    border-width: 2px;
+    border-radius: 8px;
+    padding-inline: 5px;
+    margin: 5px 2px;
+}
