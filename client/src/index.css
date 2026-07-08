@@ -119,3 +119,9 @@ code {
     padding-inline: 5px;
     margin: 5px 2px;
 }
+
+.flexRow {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}

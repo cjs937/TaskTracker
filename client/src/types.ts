@@ -21,3 +21,10 @@ export interface Project {
   taskLists: TaskList[];
   tags: string[];
 }
+
+export interface User {
+  id: string;
+  name: string;
+  password: string;
+  projects: Project[];
+}

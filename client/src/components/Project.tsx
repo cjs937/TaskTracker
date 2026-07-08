@@ -1,6 +1,7 @@
 import type { Project as ProjectType} from '../types';
 import { TaskList } from './TaskList';
 import styles from './modules/Project.module.css'
+
 interface ProjectProps {
     project: ProjectType;
 }
@@ -11,13 +12,12 @@ export function Project({project}:ProjectProps)
         <>
         <div>
             <h2 className="pill">{project.name}</h2>
-            <div className={styles.taskListRow}>
-            {
+            <div className={styles.taskListRow}>{
                 /* Implement your task list rendering here */
                 project.taskLists.map(currList => (
                 <TaskList key={currList.id} taskList={currList} />
-                ))
-            }
+                ))}
+                <div className="pill">+</div>
             </div>
         </div>
         <footer className={styles.projectFooter}>

@@ -61,3 +61,10 @@ export const mockProject: Project = {
   taskLists: [mockTaskList, mockTaskList2],
   tags: ['tag1', 'tag2']
 }
+
+export const mockProject2: Project = {
+  id: 'project-2',
+  name: 'My Project 2',
+  taskLists: [mockTaskList2],
+  tags: ['tag2']
+}
