@@ -14,8 +14,14 @@ const [user, setUser] = useState <User | null>(()=> {
 });
 
 function handleSetUser(newUser : User | null) {
+  const safeUser = {
+      id: newUser.id,
+      name: newUser.name,
+      projects: newUser.projects
+  };
+
   if(newUser)
-    localStorage.setItem('currUser', JSON.stringify(newUser));
+    localStorage.setItem('currUser', JSON.stringify(safeUser));
   else
     localStorage.removeItem('currUser');
 
