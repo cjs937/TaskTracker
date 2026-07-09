@@ -13,7 +13,7 @@ export function TaskItem({ task }: TaskItemProps) {
   return (
     <>
       <div className="task-item">
-        <button onClick={() => setModalOpen(true)}><h1>{task.title}</h1></button>
+        <button onClick={() => setModalOpen(true)}><h1>{task.name}</h1></button>
       </div>
       
       <TaskModal 

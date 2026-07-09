@@ -45,14 +45,12 @@ export const mockTaskList: TaskList = {
   id: 'list-1',
   name: 'My Tasks',
   tasks: mockTasks,
-  createdAt: new Date('2026-06-22'),
 };
 
 export const mockTaskList2: TaskList = {
   id: 'list-2',
   name: 'Another Task List',
   tasks: mockTasks2,
-  createdAt: new Date('2026-06-22'),
 };
 
 export const mockProject: Project = {
@@ -66,5 +64,4 @@ export const mockProject2: Project = {
   id: 'project-2',
   name: 'My Project 2',
   taskLists: [mockTaskList2],
-  tags: ['tag2']
 }

@@ -1,30 +1,33 @@
 export interface Task {
   id: string;
-  title: string;
+  name: string;
   description?: string;
   completed: boolean;
   priority: 'low' | 'medium' | 'high';
   dueDate?: Date;
   createdAt: Date;
+  tags?: string[];
 }
 
 export interface TaskList {
   id: string;
   name: string;
-  tasks: Task[];
-  createdAt: Date;
+  description?: string;
+  tasks?: Task[];
 }
 
 export interface Project {
   id: string;
   name: string;
-  taskLists: TaskList[];
-  tags: string[];
+  description?: string;
+  taskLists?: TaskList[];
+  tags?: string[];
 }
 
 export interface User {
   id: string;
   name: string;
   password: string;
-  projects: Project[];
+  authority: "admin" | "user" | "viewer" 
+  projects?: Project[];
 }
