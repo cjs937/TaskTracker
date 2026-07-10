@@ -45,12 +45,14 @@ function getDb() {
  * @param {sqlite3.Database} db - Database connection
  */
 function initializeDatabase(db) {
+  console.log("Initializing TaskTracker Database");
+
   db.run(`
     CREATE TABLE IF NOT EXISTS users (
       id TEXT PRIMARY KEY,
       name TEXT NOT NULL UNIQUE,
       password TEXT NOT NULL,
-      authority TEXT NOT NULL
+      authority TEXT CHECK (authority IN ("admin", "user", "viewer")) NOT NULL
     )`, (error) => {
       if(error) { console.error("Error creating users table:", error.message); }}
   );
