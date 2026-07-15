@@ -20,7 +20,7 @@ const { getDb, initializeDatabase } = require('./database');
 // TODO: Add your route imports here, for example:
 // const taskRoutes = require('./routes/tasks');
 // const projectRoutes = require('./routes/projects');
-// const authRoutes = require('./routes/auth');
+const authRoutes = require('./routes/auth');
 
 // Create Express application
 const app = express();
@@ -55,12 +55,12 @@ app.use((req, res, next) => {
 // TODO: Add your route registrations here, for example:
 // app.use('/api/tasks', taskRoutes);
 // app.use('/api/projects', projectRoutes);
-// app.use('/api/auth', authRoutes);
+app.use('/api/auth', authRoutes);
 
 // Root endpoint - useful for testing if the server is running
 // TODO: Update this message for your application
 app.get('/', (req, res) => {
-  res.json({ message: 'API is running' });
+  res.json({ message: 'Task Tracker API is running' });
 });
 
 // Error handling middleware

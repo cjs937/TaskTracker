@@ -59,7 +59,7 @@ function initializeDatabase(db) {
 
   db.run(`
     CREATE TABLE IF NOT EXISTS projects (
-      id TEXT PRIMARY KEY,
+      id INTEGER AUTO_INCREMENT PRIMARY KEY,
       name TEXT NOT NULL,
       tags TEXT,
       description TEXT,
@@ -71,10 +71,10 @@ function initializeDatabase(db) {
 
   db.run(`
     CREATE TABLE IF NOT EXISTS task_lists (
-      id TEXT PRIMARY KEY,
+      id INTEGER AUTO_INCREMENT PRIMARY KEY,
       name TEXT NOT NULL,
       description TEXT,
-      project_id TEXT NOT NULL,
+      project_id INTEGER NOT NULL,
       FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE CASCADE
     )`, (error) => {
       if(error) { console.error("Error creating task_lists table:", error.message); }}
@@ -82,7 +82,7 @@ function initializeDatabase(db) {
 
   db.run(`
     CREATE TABLE IF NOT EXISTS tasks (
-      id TEXT PRIMARY KEY,
+      id INTEGER AUTO_INCREMENT PRIMARY KEY,
       name TEXT NOT NULL,
       description TEXT,
       completed INTEGER DEFAULT 0 NOT NULL,
