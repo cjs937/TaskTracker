@@ -10,6 +10,9 @@ router.post("/", async (req, res) => {
 try {
     const {task, task_list_id} = req.body;
 
+    const targetList = await get(req.db, `SELECT * FROM task_lists WHERE id = ?`, [task_list_id]);
+    if(!targetList)
+        return res.status(400).json({error: `Invalid task list ID (${task_list_id}).`})
     if (!task.name || !task.priority || !task.createdAt || !task_list_id) 
         return res.status(400).json({ error: "Missing required fields" });
     
