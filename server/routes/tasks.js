@@ -30,9 +30,11 @@ try {
         JSON.stringify(task.tags || []),
         task_list_id
     ];
-    const taskID = await run(req.db, sqlString, values).id;
+    const taskID = (await run(req.db, sqlString, values)).id;
     
     const newTask = await get(req.db, `SELECT * FROM tasks WHERE id = ?`, [taskID]);
+    console.log("New task added:", newTask);
+
     return res.status(201).json(mapTask(newTask));
 }
 catch(error) {

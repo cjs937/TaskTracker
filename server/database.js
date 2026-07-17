@@ -58,7 +58,7 @@ function initializeDatabase(db) {
 
   db.run(`
     CREATE TABLE IF NOT EXISTS projects (
-      id INTEGER AUTO_INCREMENT PRIMARY KEY,
+      id INTEGER PRIMARY KEY,
       name TEXT NOT NULL,
       tags TEXT,
       description TEXT,
@@ -70,7 +70,7 @@ function initializeDatabase(db) {
 
   db.run(`
     CREATE TABLE IF NOT EXISTS task_lists (
-      id INTEGER AUTO_INCREMENT PRIMARY KEY,
+      id INTEGER PRIMARY KEY,
       name TEXT NOT NULL,
       description TEXT,
       project_id INTEGER NOT NULL,
@@ -81,7 +81,7 @@ function initializeDatabase(db) {
 
   db.run(`
     CREATE TABLE IF NOT EXISTS tasks (
-      id INTEGER AUTO_INCREMENT PRIMARY KEY,
+      id INTEGER PRIMARY KEY,
       name TEXT NOT NULL,
       description TEXT,
       completed INTEGER DEFAULT 0 NOT NULL,

@@ -59,8 +59,9 @@ router.post('/register', async (req, res) => {
         await run(req.db, 'INSERT INTO users (id, name, password, authority) VALUES (?, ?, ?, ?)', [userID, name, hashedPassword, (authority || "user")]);
 
         const outUser = await get(req.db, 'SELECT id, name FROM users WHERE id = ?', [userID]);
-        return res.status(201).json(outUser);
+        console.log("New user added:", outUser);
 
+        return res.status(201).json(outUser);
     }
     catch (err) {
         console.error("Error registering user: ", err);
