@@ -40,7 +40,6 @@ function getDb() {
 /**
  * Initialize database tables
  * This function creates all necessary tables if they don't exist.
- * TODO: Add your table schemas here based on your application's data model.
  * 
  * @param {sqlite3.Database} db - Database connection
  */
@@ -90,7 +89,7 @@ function initializeDatabase(db) {
       due_date TEXT,
       created_at TEXT NOT NULL,
       tags TEXT,
-      task_list_id TEXT NOT NULL,
+      task_list_id INTEGER NOT NULL,
       FOREIGN KEY (task_list_id) REFERENCES task_lists(id) ON DELETE CASCADE
     )`, (error) => {
       if(error) { console.error("Error creating tasks table:", error.message); }}

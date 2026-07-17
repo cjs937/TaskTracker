@@ -1,5 +1,5 @@
 export interface Task {
-  id: string;
+  id: number;
   name: string;
   description?: string;
   completed: boolean;
@@ -10,14 +10,14 @@ export interface Task {
 }
 
 export interface TaskList {
-  id: string;
+  id: number;
   name: string;
   description?: string;
   tasks?: Task[];
 }
 
 export interface Project {
-  id: string;
+  id: number;
   name: string;
   description?: string;
   taskLists?: TaskList[];

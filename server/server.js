@@ -18,7 +18,7 @@ const { getDb, initializeDatabase } = require('./database');
 
 // Import route handlers
 // TODO: Add your route imports here, for example:
-// const taskRoutes = require('./routes/tasks');
+const taskRoutes = require('./routes/tasks');
 // const projectRoutes = require('./routes/projects');
 const authRoutes = require('./routes/auth');
 
@@ -53,12 +53,11 @@ app.use((req, res, next) => {
 
 // API Routes
 // TODO: Add your route registrations here, for example:
-// app.use('/api/tasks', taskRoutes);
+app.use('/api/tasks', taskRoutes);
 // app.use('/api/projects', projectRoutes);
 app.use('/api/auth', authRoutes);
 
 // Root endpoint - useful for testing if the server is running
-// TODO: Update this message for your application
 app.get('/', (req, res) => {
   res.json({ message: 'Task Tracker API is running' });
 });
