@@ -8,12 +8,12 @@ const { mapTask } = require("../utils/mappers");
 //ADD
 router.post("/", async (req, res) => {
 try {
-    const {task, task_list_id} = req.body;
+    const {task, taskListID} = req.body;
 
-    const targetList = await get(req.db, `SELECT * FROM task_lists WHERE id = ?`, [task_list_id]);
+    const targetList = await get(req.db, `SELECT * FROM task_lists WHERE id = ?`, [taskListID]);
     if(!targetList)
-        return res.status(400).json({error: `Invalid task list ID (${task_list_id}).`})
-    if (!task.name || !task.priority || !task.createdAt || !task_list_id) 
+        return res.status(400).json({error: `Invalid task list ID (${taskListID}).`})
+    if (!task.name || !task.priority || !taskListID) 
         return res.status(400).json({ error: "Missing required fields" });
     
     const sqlString = `INSERT INTO tasks 
@@ -24,11 +24,11 @@ try {
         task.name,
         task.description || null,
         0,
-        task.priority,
-        task.dueDate?.toISOString() || null,
-        task.createdAt.toISOString(),
+        task.priority || "low",
+        null,
+        new Date().toISOString(),
         JSON.stringify(task.tags || []),
-        task_list_id
+        taskListID
     ];
     const taskID = (await run(req.db, sqlString, values)).id;
     
@@ -46,7 +46,7 @@ catch(error) {
 //GET
 router.get("/", async (req, res) => {
 try {
-    const { name, tags, completed, priority, task_list_id, inclusiveSearch } = req.query;
+    const { name, tags, completed, priority, taskListID, inclusiveSearch } = req.query;
     const searchText = [];
     const params = [];
 
@@ -70,9 +70,9 @@ try {
       params.push(priority);
     }
  
-    if (task_list_id) {
-      searchText.push("task_list_id = ?");
-      params.push(task_list_id);
+    if (taskListID) {
+      searchText.push("task_list_ID = ?");
+      params.push(taskListID);
     }
 
     if(searchText.length === 0)
@@ -130,7 +130,7 @@ try {
     if(!targetTask)
         return res.status(404).json({ message: `Could not find task to update (${req.params.id})`});
 
-    const { name, tags, completed, priority, task_list_id } = req.body;
+    const { name, description, completed, priority, dueDate, tags, taskListID } = req.body;
     const updateText = [];
     const params = [];
 
@@ -139,9 +139,9 @@ try {
         params.push(name);
     }
 
-    if(tags) {
-        updateText.push(`tags = ?`);
-        params.push(JSON.stringify(tags));
+    if(name) {
+        updateText.push(`description = ?`);
+        params.push(description);
     }
 
     if (completed !== undefined) {
@@ -153,10 +153,20 @@ try {
       updateText.push("priority = ?");
       params.push(priority);
     }
- 
-    if (task_list_id) {
+    
+    if (dueDate) {
+      updateText.push("due_date = ?");
+      params.push(JSON.stringify(dueDate));
+    }
+    
+    if(tags) {
+        updateText.push(`tags = ?`);
+        params.push(JSON.stringify(tags));
+    }
+
+    if (taskListID) {
       updateText.push("task_list_id = ?");
-      params.push(task_list_id);
+      params.push(taskListID);
     }
 
     if(updateText.length === 0)
