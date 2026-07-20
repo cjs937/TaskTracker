@@ -2,9 +2,10 @@ const express = require('express');
 const router = express.Router();
 const { get, run, query } = require('../database');
 const { mapProject } = require("../utils/mappers");
+const { authenticateJWT } = require("../utils/authentication");
 
 //CREATE
-router.post("/", async(req, res) => {
+router.post("/", authenticateJWT, async(req, res) => {
 try {
     const { project, userID } = req.body;
 
@@ -38,7 +39,7 @@ catch (error) {
 
 });
 //READ
-router.get("/", async (req, res) => {
+router.get("/", authenticateJWT, async (req, res) => {
 try {
     const { name, tags, userID, inclusiveSearch } = req.query;
     const searchText = [];
@@ -77,7 +78,7 @@ catch (error) {
 }
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", authenticateJWT, async (req, res) => {
 try {
     const requestedProject = await get(req.db, `SELECT * FROM projects WHERE id = ?`, [req.params.id]);
     
@@ -93,7 +94,7 @@ catch(error) {
 });
 
 //UPDATE
-router.patch("/:id", async (req, res) => {
+router.patch("/:id", authenticateJWT, async (req, res) => {
 try {
     const targetProject = await get(req.db, `SELECT * FROM projects WHERE id = ?`, [req.params.id]);
     if(!targetProject)
@@ -140,7 +141,7 @@ catch(error) {
 });
 
 //DELETE
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", authenticateJWT, async (req, res) => {
 try {
     const targetProject = await get(req.db, `SELECT * FROM projects WHERE id = ?`, [req.params.id]);
     if(!targetProject)

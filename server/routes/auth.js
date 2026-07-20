@@ -21,6 +21,9 @@ const { ulid } = require("ulid");
 const bcrypt = require("bcrypt");
 const router = express.Router();
 const { get, run, query } = require('../database');
+const jwt = require("jsonwebtoken");
+const JWT_SECRET = process.env.JWT_SECRET;
+const { GenerateToken, authenticateJWT } = require("../utils/authentication");
 
 async function TryGenID(db, maxAttempts)
 {
@@ -36,7 +39,6 @@ async function TryGenID(db, maxAttempts)
     throw new Error(`Could not generate unique ID within ${maxAttempts} attempts`);
 }
 
-
 router.post('/register', async (req, res) => {
     try {
         if(!req.db)
@@ -45,7 +47,7 @@ router.post('/register', async (req, res) => {
         if(!req.body)
             return res.status(400).json({error: "Empty request body"});
 
-        const {name, password, authority} = req.body;
+        const {name, password} = req.body;
 
         if(!name || !password)
             return res.status(400).json({ error: "Name and password are required"});
@@ -56,12 +58,13 @@ router.post('/register', async (req, res) => {
 
         const userID = await TryGenID(req.db, 3);
         const hashedPassword = await bcrypt.hash(password, 10);
-        await run(req.db, 'INSERT INTO users (id, name, password, authority) VALUES (?, ?, ?, ?)', [userID, name, hashedPassword, (authority || "user")]);
+        await run(req.db, 'INSERT INTO users (id, name, password, authority) VALUES (?, ?, ?, ?)', [userID, name, hashedPassword, "user"]);
 
         const outUser = await get(req.db, 'SELECT id, name FROM users WHERE id = ?', [userID]);
         console.log("New user added:", outUser);
 
-        return res.status(201).json(outUser);
+        const userToken = GenerateToken(userID, outUser.name, outUser.authority);
+        return res.status(201).json(userToken);
     }
     catch (err) {
         console.error("Error registering user: ", err);
@@ -85,8 +88,9 @@ router.post('/login', async (req, res) => {
         if(!userInfo || !(await bcrypt.compare(password, userInfo.password)))
             return res.status(401).json({error: "Invalid username or password"});
 
-        const outUser = {id: userInfo.id, name: userInfo.name};
-        return res.status(200).json(outUser);
+        const userToken = GenerateToken(userInfo.id, userInfo.name, userInfo.authority);
+
+        return res.status(200).json({authToken: userToken});
     }
     catch (err) {
         console.error("Error logging in user: ", err);
@@ -94,9 +98,10 @@ router.post('/login', async (req, res) => {
     }
 });
 
-router.post('/logout', async(req, res) => {
-    return res.json({message: "Logged out successfully"});
-});
+// router.post('/logout', authenticateJWT, async(req, res) => {
+    
+//     return res.json({message: "Logged out successfully"});
+// });
 
 //TODO: ADD DELETE USER
 module.exports = router;

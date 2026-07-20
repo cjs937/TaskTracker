@@ -4,9 +4,9 @@ const express = require('express');
 const router = express.Router();
 const { get, run, query } = require('../database');
 const { mapTask } = require("../utils/mappers");
-
+const { authenticateJWT } = require("../utils/authentication");
 //ADD
-router.post("/", async (req, res) => {
+router.post("/", authenticateJWT, async (req, res) => {
 try {
     const {task, taskListID} = req.body;
 
@@ -44,7 +44,7 @@ catch(error) {
 });
 
 //GET
-router.get("/", async (req, res) => {
+router.get("/", authenticateJWT, async (req, res) => {
 try {
     const { name, tags, completed, priority, taskListID, inclusiveSearch } = req.query;
     const searchText = [];
@@ -93,7 +93,7 @@ catch (error) {
 }
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", authenticateJWT, async (req, res) => {
 try {
     const requestedTask = await get(req.db, `SELECT * FROM tasks WHERE id = ?`, [req.params.id]);
     
@@ -109,7 +109,7 @@ catch(error) {
 });
 
 //REMOVE
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", authenticateJWT, async (req, res) => {
 try {
     const targetTask = await get(req.db, `SELECT * FROM tasks WHERE id = ?`, [req.params.id]);
     if(!targetTask)
@@ -124,7 +124,7 @@ catch(error) {
 });
 
 //UPDATE
-router.patch("/:id", async (req, res) => {
+router.patch("/:id", authenticateJWT, async (req, res) => {
 try {
     const targetTask = await get(req.db, `SELECT * FROM tasks WHERE id = ?`, [req.params.id]);
     if(!targetTask)
@@ -139,7 +139,7 @@ try {
         params.push(name);
     }
 
-    if(name) {
+    if(description) {
         updateText.push(`description = ?`);
         params.push(description);
     }
