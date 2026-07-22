@@ -45,5 +45,6 @@ catch (error) {
 
 module.exports = {
     GenerateToken,
-    authenticateJWT
+    authenticateJWT,
+    ValidateToken
 };

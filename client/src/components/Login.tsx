@@ -36,6 +36,7 @@ export function Login({onLogin}: LoginProps) {
         const data = await response.json();
 
         if(response.ok) {
+            console.log("Auth token:", data.authToken);
             const outUser = await ConstructUserFromToken(data.authToken);
 
             onLogin(data.authToken, outUser);

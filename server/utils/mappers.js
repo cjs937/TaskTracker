@@ -35,7 +35,7 @@ function mapTask(task) {
     return {
         ...task,
         dueDate: task.due_date ? new Date(task.due_date) : null,
-        createdAt: new Date(task.created_at),
+        createdAt: task.created_at,
         completed: task.completed === 1,
         tags: task.tags ? JSON.parse(task.tags) : undefined
   };

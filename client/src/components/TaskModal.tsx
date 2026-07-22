@@ -10,13 +10,14 @@ interface TaskModalProps {
 
 export function TaskModal({taskItem, show, onHide}:TaskModalProps) 
 {
+    console.log("Task created at is a:", typeof(taskItem.createdAt));
     return(
         <Modal show={show} onHide={onHide} size="lg">
             <Modal.Header closeButton className={styles.modalHeader}>
                 <Modal.Title className="pill">{taskItem.name}</Modal.Title>
                 <div className={styles.pillRowGapped}>
                     <div className="pill">{taskItem.priority}</div>
-                    <div className="pill">{taskItem.createdAt.toDateString()}</div>
+                    {<div className="pill">{new Date(taskItem.createdAt).toDateString()}</div>}
                 </div>
             </Modal.Header>
             <Modal.Body>

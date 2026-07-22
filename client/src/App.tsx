@@ -23,7 +23,7 @@ function App() {
     return cachedToken || null;
   });
 
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -32,7 +32,7 @@ function App() {
 
       if(cachedToken && cachedToken !== null) {
         
-        const tokenValidation = await fetch(`http://localhost:3001/api/auth/:${cachedToken}`, {
+        const tokenValidation = await fetch(`http://localhost:3001/api/auth/${cachedToken}`, {
           method: "GET",
         });
 
@@ -49,7 +49,7 @@ function App() {
     };
 
     initializeUser();
-  }, []);
+  }, [userToken]);
 
   return (
     <>
