@@ -23,7 +23,7 @@ const router = express.Router();
 const { get, run, query } = require('../database');
 const jwt = require("jsonwebtoken");
 const JWT_SECRET = process.env.JWT_SECRET;
-const { GenerateToken, authenticateJWT } = require("../utils/authentication");
+const { GenerateToken, ValidateToken } = require("../utils/authentication");
 
 async function TryGenID(db, maxAttempts)
 {
@@ -98,6 +98,19 @@ router.post('/login', async (req, res) => {
     }
 });
 
+router.get("/:token", async (req, res) => {
+    try{
+        const token = req.params.token;
+        if(ValidateToken(token))
+            return res.sendStatus(200);
+        else
+            return res.sendStatus(403);
+    }
+    catch(error) {
+        console.error("Error validating token:", error);
+        res.status(500).json({ error: "Error authenticating token"});
+    }
+})
 // router.post('/logout', authenticateJWT, async(req, res) => {
     
 //     return res.json({message: "Logged out successfully"});

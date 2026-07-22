@@ -1,47 +1,75 @@
-import { useState } from 'react'
+import { cache, useState, useEffect } from 'react'
 import type { User } from './types'
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate, data } from 'react-router-dom'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import './App.css'
 import { Login } from './components/Login'
 import { Dashboard } from './components/Dashboard'
-
+import { Project } from "./components/Project"
+import { ConstructUserFromToken } from "./utils/tokenUtils"
 
 function App() {
-const [user, setUser] = useState <User | null>(()=> {
-  const cachedUser = localStorage.getItem('currUser');
-  return cachedUser ? JSON.parse(cachedUser) : null;
-});
 
-function handleSetUser(newUser : User | null) {
-  const safeUser = {
-      id: newUser.id,
-      name: newUser.name,
-      projects: newUser.projects
+  function handleSetUser(token: string | null, newUser : User | null) {
+
+    localStorage.setItem("authToken", token);
+  
+    setUserToken(token);
+    setUser(newUser);
   };
 
-  if(newUser)
-    localStorage.setItem('currUser', JSON.stringify(safeUser));
-  else
-    localStorage.removeItem('currUser');
+  const [userToken, setUserToken] = useState <string | null>(() => {
+    const cachedToken = localStorage.getItem('authToken');
+    return cachedToken || null;
+  });
 
-  setUser(newUser);
-};
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const initializeUser = async () => {
+      const cachedToken = localStorage.getItem('authToken');
+
+      if(cachedToken && cachedToken !== null) {
+        
+        const tokenValidation = await fetch(`http://localhost:3001/api/auth/:${cachedToken}`, {
+          method: "GET",
+        });
+
+        if(tokenValidation.ok)
+          setUser( await ConstructUserFromToken(cachedToken) );
+        else {
+          localStorage.removeItem("authToken");
+          setUser(null);
+          setUserToken(null);
+        }
+      }
+      
+      setLoading(false);
+    };
+
+    initializeUser();
+  }, []);
 
   return (
     <>
       <BrowserRouter>
         <Routes>
-          <Route path="/login" element={<Login onLogin={handleSetUser} />} />
-          <Route path="/dashboard" element={user ? 
-            <Dashboard user={user} onLogout={handleSetUser}/> : 
-            <Navigate to='/login' />} 
-          />
+          <Route path="/projects/:projectID" element={<Project />} />
+          <Route path="/login" element={ userToken ? <Navigate to="/dashboard" /> : 
+            <Login onLogin={handleSetUser} />} />
+
+          <Route path="/dashboard" element={loading ? <div>Loading...</div> :
+           user ? 
+            <Dashboard userToken={userToken} user={user} onLogout={handleSetUser}/> : 
+            <Navigate to='/login' />} />
+
           <Route path="/" element={<Navigate to="/dashboard" />} />
+
         </Routes>
       </BrowserRouter>
     </>
   )
 }
 
-export default App      
+export default App    

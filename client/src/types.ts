@@ -27,7 +27,6 @@ export interface Project {
 export interface User {
   id: string;
   name: string;
-  password: string;
   authority: "admin" | "user" | "viewer" 
   projects?: Project[];
 }

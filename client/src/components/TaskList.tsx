@@ -1,7 +1,8 @@
 import type { TaskList as TaskListType } from '../types';
 import { TaskItem } from './TaskItem';
 import styles from './modules/TaskList.module.css';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { GetLocalToken } from '../utils/tokenUtils';
 
 interface TaskListProps {
   taskList: TaskListType;
@@ -9,20 +10,45 @@ interface TaskListProps {
 
 export function TaskList({ taskList }: TaskListProps) {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [tasks, setTasks] = useState([]);
+  console.log("Loading task list: ", taskList);
 
-  return (
+  useEffect( () => {
+    const getTasks = async () => {
+      console.log("Getting tasks...");
+      const response = await fetch(`http://localhost:3001/api/tasts/?taskListID=${taskList.id}`, {
+          method: "GET",
+          headers: { "Authorization": `Bearer ${GetLocalToken()}`}
+      });
+
+      console.log("Server response:", response);
+      
+      if(response.ok) {
+        const data = await response.json();
+        setTasks(data);
+        console.log("Final tasks:", data);
+      }
+    }
+
+    getTasks();
+  });
+  
+  return ( 
     <>
       <div className="task-list">
         <h2 className="pill" onClick={() => setIsExpanded(!isExpanded)}>
           {taskList.name}
         </h2>
         { isExpanded && (
-          <div className={styles.taskListGrid}>{
-            taskList.tasks.map(currTask => (
-              <TaskItem key={currTask.id} task={currTask} />
-            ))}
-          </div>
-        )}
+          tasks && tasks.length > 0 ? 
+            <div className={styles.taskListGrid}>{
+              tasks.map(currTask => (
+              <TaskItem key={currTask.id} task={currTask} />))
+            }
+            </div> : 
+            <div>NO TASKS</div>
+          )
+        }
       </div>
     </>
   );
