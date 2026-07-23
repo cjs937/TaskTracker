@@ -1,18 +1,14 @@
 import type { Project as ProjectType} from '../types';
 import { TaskList } from './TaskList';
-import styles from './modules/Project.module.css'
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { GetLocalToken } from '../utils/tokenUtils';
-// interface ProjectProps {
-//     project: ProjectType;
-// }
 
 export function Project()
 {
     const { projectID } = useParams<{ projectID: string }>();
     const [project, setProject] = useState(null);
-    
+
     console.log("Loading project: ", projectID);
 
     useEffect(() => {
@@ -30,18 +26,14 @@ export function Project()
                         alert(projectData.error || "Invalid request for project data");
                         return;
                     }
-                    
-                    console.log("Fetched project data:", projectData);
-                    
-                    console.log("Getting task lists...");
+
                     const taskListResponse = await fetch(`http://localhost:3001/api/taskLists/?projectID=${projectID}`, {
                         method: "GET",
                         headers: { "Authorization": `Bearer ${GetLocalToken()}`}
                     });
 
-                    console.log("Server response:", taskListResponse);
                     const taskListData = await taskListResponse.json();
-                    
+
                     const proj = {...projectData, taskLists: taskListData || []};
                     setProject(proj);
                     console.log("Final project:", proj);
@@ -55,29 +47,33 @@ export function Project()
     }, [projectID]);
 
     if(!project || !project.taskLists)
-        return (<div>Loading...</div>);
-    
+        return (<div className="flex justify-center items-center min-h-screen">Loading...</div>);
+
     return (
-        <>
-        <div>
-            <h2 className="pill">{project.name}</h2>
-             
-            <div className={styles.taskListRow}>{ (project.taskLists && project.taskLists.length > 0) ?
-                project.taskLists.map(currList => (
-                <TaskList key={currList.id} taskList={currList} />
-                )) : <></> }
+        <div className="min-h-screen bg-gray-100 p-8">
+            <div className="max-w-6xl mx-auto">
+                <h2 className="text-3xl font-semibold text-gray-800 mb-6">{project.name}</h2>
 
-                <div className="pill">+</div>
+                <div className="flex flex-wrap gap-4 mb-8">
+                    { (project.taskLists && project.taskLists.length > 0) ?
+                        project.taskLists.map(currList => (
+                        <TaskList key={currList.id} taskList={currList} />
+                        )) : <></> }
+
+                    <div className="bg-white border-2 border-gray-800 rounded-lg px-4 py-2 cursor-pointer hover:bg-gray-200 transition-colors">
+                        +
+                    </div>
+                </div>
+
+                <footer className="flex gap-3">
+                    <div className="bg-white border-2 border-gray-800 rounded-lg px-4 py-2 cursor-pointer hover:bg-gray-200 transition-colors">
+                        Edit Tags
+                    </div>
+                    <div className="bg-white border-2 border-gray-800 rounded-lg px-4 py-2 cursor-pointer hover:bg-gray-200 transition-colors">
+                        Search
+                    </div>
+                </footer>
             </div>
-            
         </div>
-
-        <footer className={styles.projectFooter}>
-
-            <div className="pill">Edit Tags</div>
-            <div className="pill">Search</div>
-
-        </footer>
-        </>
     );
 }

@@ -7,7 +7,7 @@ import { Login } from './components/Login'
 import { Dashboard } from './components/Dashboard'
 import { Project } from "./components/Project"
 import { ConstructUserFromToken } from "./utils/tokenUtils"
-
+import { Header } from "./components/Header"
 function App() {
 
   function handleSetUser(token: string | null, newUser : User | null) {
@@ -52,8 +52,9 @@ function App() {
   }, [userToken]);
 
   return (
-    <>
-      <BrowserRouter>
+    <BrowserRouter>
+      {user && <Header user={user} onLogout={handleSetUser}/>}
+      <div className={user ? "pt-16" : ""}>
         <Routes>
           <Route path="/projects/:projectID" element={<Project />} />
           <Route path="/login" element={ userToken ? <Navigate to="/dashboard" /> : 
@@ -61,14 +62,14 @@ function App() {
 
           <Route path="/dashboard" element={loading ? <div>Loading...</div> :
            user ? 
-            <Dashboard userToken={userToken} user={user} onLogout={handleSetUser}/> : 
+            <Dashboard userToken={userToken} user={user}/> : 
             <Navigate to='/login' />} />
 
           <Route path="/" element={<Navigate to="/dashboard" />} />
 
         </Routes>
-      </BrowserRouter>
-    </>
+      </div>
+    </BrowserRouter>
   )
 }
 

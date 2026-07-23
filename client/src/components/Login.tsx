@@ -1,7 +1,6 @@
 import type {User} from '../types'
 import { mockUsers } from '../data/mockUsers';
 import { useState } from 'react'
-import styles from './modules/Login.module.css'
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from "jwt-decode";
 import type { JwtPayload } from 'jwt-decode';
@@ -52,17 +51,32 @@ export function Login({onLogin}: LoginProps) {
     };
 
     return (
-        <>
-            <h1>Login Pls!</h1>
-            <form id="LoginForm" className="container" onSubmit={onFormSubmit}>
-                <div className={styles.loginColumn}>
-                    <input type="text" placeholder='Enter Username' required 
-                        onChange={(input) => setUsername(input.target.value)}/>
-                    <input type="password" placeholder='Enter Password' required 
-                        onChange={(input) => setPassword(input.target.value)}/>
-                    <button type="submit">Submit</button>
-                </div>
-            </form>
-        </>
+        <div className="min-h-screen flex items-center justify-center bg-gray-100">
+            <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+                <h1 className="text-3xl font-semibold text-gray-800 mb-6 text-center">Login</h1>
+                <form onSubmit={onFormSubmit} className="flex flex-col gap-4">
+                    <input 
+                        type="text" 
+                        placeholder='Enter Username' 
+                        required 
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                        onChange={(input) => setUsername(input.target.value)}
+                    />
+                    <input 
+                        type="password" 
+                        placeholder='Enter Password' 
+                        required 
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                        onChange={(input) => setPassword(input.target.value)}
+                    />
+                    <button 
+                        type="submit"
+                        className="w-full bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 transition-colors font-medium"
+                    >
+                        Submit
+                    </button>
+                </form>
+            </div>
+        </div>
     );
 }

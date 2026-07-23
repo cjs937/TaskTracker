@@ -1,6 +1,5 @@
 import type { Task } from '../types';
 import {TaskModal} from './TaskModal'
-//import styles from './modules/TaskItem.module.css';
 import { useState } from 'react';
 
 interface TaskItemProps {
@@ -13,13 +12,18 @@ export function TaskItem({ task }: TaskItemProps) {
   return (
     <>
       <div className="task-item">
-        <button onClick={() => setModalOpen(true)}><h1>{task.name}</h1></button>
+        <button
+          onClick={() => setModalOpen(true)}
+          className="text-left text-gray-700 hover:text-gray-900 hover:bg-gray-100 transition-colors rounded px-2 py-1 w-full"
+        >
+          {task.name}
+        </button>
       </div>
-      
-      <TaskModal 
-        taskItem={task} 
+
+      <TaskModal
+        taskItem={task}
         show={isModalOpen}
-        onHide={() => { 
+        onHide={() => {
           setModalOpen(false)}
         }
       />
