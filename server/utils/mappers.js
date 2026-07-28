@@ -26,7 +26,8 @@ function mapTaskList(taskList) {
     if(!taskList) return null;
     return {
         ...taskList,
-        tasks: taskList.tasks ? taskList.tasks.map(mapTask) : undefined
+        tasks: taskList.tasks ? taskList.tasks.map(mapTask) : undefined,
+        projectID: taskList.project_id
     };
 }
 
@@ -37,7 +38,8 @@ function mapTask(task) {
         dueDate: task.due_date ? new Date(task.due_date) : null,
         createdAt: task.created_at,
         completed: task.completed === 1,
-        tags: task.tags ? JSON.parse(task.tags) : undefined
+        tags: task.tags ? JSON.parse(task.tags) : undefined,
+        taskListID: task.task_list_id
   };
 }
 

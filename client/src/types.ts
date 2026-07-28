@@ -7,6 +7,7 @@ export interface Task {
   dueDate?: Date;
   createdAt: Date;
   tags?: string[];
+  taskListID: number;
 }
 
 export interface TaskList {
@@ -14,6 +15,7 @@ export interface TaskList {
   name: string;
   description?: string;
   tasks?: Task[];
+  projectID: number;
 }
 
 export interface Project {

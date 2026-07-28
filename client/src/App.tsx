@@ -8,6 +8,7 @@ import { Dashboard } from './components/Dashboard'
 import { Project } from "./components/Project"
 import { ConstructUserFromToken } from "./utils/tokenUtils"
 import { Header } from "./components/Header"
+
 function App() {
 
   function handleSetUser(token: string | null, newUser : User | null) {
