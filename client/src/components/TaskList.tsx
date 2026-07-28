@@ -23,7 +23,7 @@ export function TaskList({ taskList, onDataChanged, onDeleteTaskList }: TaskList
           "Content-Type": "application/json",
           "Authorization": `Bearer ${GetLocalToken()}`
         },
-        body: JSON.stringify({ task: { name: "New Task", priority: "low" }, taskListID: taskList.id })
+        body: JSON.stringify({ task: { name: "New Task", description: "Add description...", priority: "Low" }, taskListID: taskList.id })
       });
 
       if(postResult.ok) {
@@ -92,7 +92,7 @@ export function TaskList({ taskList, onDataChanged, onDeleteTaskList }: TaskList
       console.log("Final tasks:", data);
     }
   }
-  
+
   const refreshTaskData = async () => {
     await onDataChanged();
   }
@@ -110,7 +110,7 @@ export function TaskList({ taskList, onDataChanged, onDeleteTaskList }: TaskList
       <div className="flex justify-between items-center">
         <div
           className="flex-1 cursor-pointer"
-          onClick={() => setIsExpanded(!isExpanded)}
+          onClick={(e) => { e.stopPropagation(); setIsExpanded(!isExpanded); }}
         >
           <EditableText
             value={taskList.name}
@@ -121,7 +121,7 @@ export function TaskList({ taskList, onDataChanged, onDeleteTaskList }: TaskList
         {onDeleteTaskList && (
           <button
             onClick={() => onDeleteTaskList(taskList.id)}
-            className="text-red-500 hover:text-red-700 transition-colors text-sm"
+            className="text-red-500 hover:text-red-700 transition-colors text-sm pl-4"
           >
             Delete
           </button>

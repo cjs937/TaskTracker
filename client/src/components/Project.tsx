@@ -1,6 +1,7 @@
 import type { Project as ProjectType} from '../types';
 import { TaskList } from './TaskList';
 import { EditableText } from './EditableText';
+import { Search } from './Search';
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { GetLocalToken } from '../utils/tokenUtils';
@@ -10,6 +11,7 @@ export function Project()
 {
     const { projectID } = useParams<{ projectID: string }>();
     const [project, setProject] = useState(null);
+    const [isSearchOpen, setIsSearchOpen] = useState(false);
     const navigate = useNavigate();
 
     console.log("Loading project: ", projectID);
@@ -146,7 +148,7 @@ export function Project()
                     className="text-3xl font-semibold text-gray-800 mb-6 block"
                 />
 
-                <div className="flex flex-wrap gap-4 mb-8"> { 
+                <div className="flex flex-wrap gap-4 mb-8 items-start"> { 
                     (project.taskLists && project.taskLists.length > 0) ?
                         project.taskLists.map(currList => (
                         <TaskList key={currList.id} taskList={currList} onDataChanged={loadProjectData} 
@@ -156,21 +158,26 @@ export function Project()
 
                     <div className="bg-white border-2 border-gray-800 rounded-lg px-4 py-2 cursor-pointer hover:bg-gray-200 transition-colors"
                          onClick={addNewTaskList}>
-                        +
+                        + Add List
                     </div>
                 </div>
 
                 <footer className="flex gap-3">
-                    <div className="bg-white border-2 border-gray-800 rounded-lg px-4 py-2 cursor-pointer hover:bg-gray-200 transition-colors">
-                        Edit Tags
-                    </div>
-                    <div className="bg-white border-2 border-gray-800 rounded-lg px-4 py-2 cursor-pointer hover:bg-gray-200 transition-colors">
+                    <div
+                        className="bg-white border-2 border-gray-800 rounded-lg px-4 py-2 cursor-pointer hover:bg-gray-200 transition-colors"
+                        onClick={() => setIsSearchOpen(true)}
+                    >
                         Search
                     </div>
                     <div className="bg-red border-2 border-red-800 rounded-lg px-4 py-2 cursor-pointer hover:bg-gray-200 transition-colors" onClick={deleteProject}>
                         Delete Project
                     </div>
                 </footer>
+                <Search
+                    show={isSearchOpen}
+                    onHide={() => setIsSearchOpen(false)}
+                    taskLists={project.taskLists}
+                />
             </div>
         </div>
     );

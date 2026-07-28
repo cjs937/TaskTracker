@@ -36,7 +36,7 @@ export function Header({user, onLogout}: HeaderProps){
     return(
         <header className="fixed top-0 left-0 right-0 bg-white shadow-md z-50">
             <div className="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
-                <h3 className="text-xl font-semibold text-gray-800">TaskTracker</h3>
+                <h3 className="text-xl font-semibold text-gray-800 cursor-pointer" onClick={handleDashboard}>TaskTracker</h3>
                 <div className="relative" ref={dropdownRef}>
                     <button
                         onClick={() => setIsOpen(!isOpen)}

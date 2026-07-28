@@ -1,8 +1,6 @@
 import type {User} from '../types'
-import { mockUsers } from '../data/mockUsers';
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import { jwtDecode } from "jwt-decode";
 import type { JwtPayload } from 'jwt-decode';
 import { ConstructUserFromToken } from "../utils/tokenUtils"
 

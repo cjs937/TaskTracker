@@ -57,6 +57,7 @@ export function TaskItem({ task, onDeleteTask, onDataChanged }: TaskItemProps) {
         onHide={() => {
           setModalOpen(false)
         }}
+        onDeleteTask={onDeleteTask}
       />
     </>
   );

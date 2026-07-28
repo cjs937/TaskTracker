@@ -8,13 +8,18 @@ interface TaskModalProps {
     show: boolean;
     onDataChanged: () => void;
     onHide: () => void;
+    onDeleteTask?: (taskID: number) => void;
 }
 
-export function TaskModal({taskItem, show, onDataChanged, onHide}:TaskModalProps)
+export function TaskModal({taskItem, show, onDataChanged, onHide, onDeleteTask}:TaskModalProps)
 {
     const [isDropdownOpen, setDropdownOpen] = useState(false);
+    const [isPriorityDropdownOpen, setPriorityDropdownOpen] = useState(false);
     const [altTaskLists, setAltLists] = useState<TaskList[]>([]);
+    const [ownerListName, setOwnerName] = useState("");
+    const [currentTaskListID, setCurrentTaskListID] = useState(taskItem.taskListID);
     const dropdownRef = useRef<HTMLDivElement>(null);
+    const priorityDropdownRef = useRef<HTMLDivElement>(null);
     
     const updateTaskData = async (nameUpdate = null, descUpdate = null,
         completeUpdate = null, prioUpdate = null, dueDateUpdate = null, listIDUpdate = null) => {
@@ -62,6 +67,36 @@ export function TaskModal({taskItem, show, onDataChanged, onHide}:TaskModalProps
     }
 
     useEffect(() => {
+        setCurrentTaskListID(taskItem.taskListID);
+    }, [taskItem.taskListID]);
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+                setDropdownOpen(false);
+            }
+        };
+
+        if (isDropdownOpen) {
+            document.addEventListener('mousedown', handleClickOutside);
+            return () => document.removeEventListener('mousedown', handleClickOutside);
+        }
+    }, [isDropdownOpen]);
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (priorityDropdownRef.current && !priorityDropdownRef.current.contains(event.target as Node)) {
+                setPriorityDropdownOpen(false);
+            }
+        };
+
+        if (isPriorityDropdownOpen) {
+            document.addEventListener('mousedown', handleClickOutside);
+            return () => document.removeEventListener('mousedown', handleClickOutside);
+        }
+    }, [isPriorityDropdownOpen]);
+
+    useEffect(() => {
         if (show) {
             document.body.style.overflow = 'hidden';
         } else {
@@ -103,7 +138,10 @@ export function TaskModal({taskItem, show, onDataChanged, onHide}:TaskModalProps
                 }
                 const altLists = resultData as TaskList[];
 
-                setAltLists(altLists.filter((list) =>  list.id !== taskItem.taskListID ));
+                const ownerList = altLists.find(list => list.id === currentTaskListID);
+                if (ownerList) setOwnerName(ownerList.name);
+                setAltLists(altLists.filter(list => list.id !== currentTaskListID));
+
                 console.log("Alt lists:", altTaskLists);
             }
             catch(error) {
@@ -113,74 +151,102 @@ export function TaskModal({taskItem, show, onDataChanged, onHide}:TaskModalProps
         }
 
         getAltTaskLists();
-    }, [taskItem.taskListID]);
+    }, [currentTaskListID]);
 
     if (!show) return null;
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onClick={onHide}>
             <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl mx-4" onClick={(e) => e.stopPropagation()}>
-                <div className="flex justify-between items-center p-6 border-b border-gray-200">
-                    <div className="flex-1">
-                        <EditableText
-                            value={taskItem.name}
-                            onSave={updateTaskName}
-                            className="text-2xl font-semibold text-gray-800 block"
-                        />
-                        <div className="flex gap-2 mt-2">
-                            <EditableText
-                                value={taskItem.priority}
-                                onSave={updateTaskPriority}
-                                className="bg-gray-100 border border-gray-300 rounded px-3 py-1 text-sm"
-                            />
-                            <span className="bg-gray-100 border border-gray-300 rounded px-3 py-1 text-sm">{new Date(taskItem.createdAt).toDateString()}</span>
-                            <div className="relative" ref={dropdownRef}>
-                                <button
-                                    onClick={() => { setDropdownOpen(!isDropdownOpen); console.log("Dropdown clicked, current state:", isDropdownOpen);}}
-                                    className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors"
-                                >
-                                <span className="text-gray-700">Dropdown</span>
-                                </button>
-                                {isDropdownOpen && (
-                                    <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg">
-                                        {altTaskLists.map(list => (
-                                            <button
-                                                key={list.id}
-                                                onClick={() => {
-                                                    updateTaskData(null, null, null, null, null, list.id);
-                                                    setDropdownOpen(false);
-                                                }}
-                                                className="block w-full text-left px-4 py-2 hover:bg-gray-100"
-                                            >
-                                                {list.name}
-                                            </button>
-                                        ))}
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                    </div>
+                {/* Row 1: title + close button */}
+                <div className="flex justify-between items-start gap-4 px-6 pt-6 pb-3">
+                    <EditableText
+                        value={taskItem.name}
+                        onSave={updateTaskName}
+                        className="text-2xl font-semibold text-gray-800 block"
+                    />
                     <button
                         onClick={onHide}
-                        className="text-gray-500 hover:text-gray-700 transition-colors text-2xl font-light"
+                        className="text-gray-500 hover:text-gray-700 transition-colors text-2xl font-light flex-shrink-0"
                     >
                         ×
                     </button>
                 </div>
+
+                {/* Row 2: dropdown (left) + priority & date grouped (right) */}
+                <div className="flex justify-between items-center px-6 pb-6 border-b border-gray-200">
+                    <div className="relative bg-gray-100 border border-gray-300 rounded" ref={dropdownRef}>
+                        {altTaskLists.length > 0 && (
+                        <button
+                            onClick={() => { setDropdownOpen(!isDropdownOpen);}}
+                            className="flex items-center justify-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors"
+                        >
+                            <span className="text-gray-700">{ownerListName}</span>
+                        </button>
+                        )}
+                        {isDropdownOpen && (
+                            <div className="absolute left-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg">
+                                {altTaskLists.map(list => (
+                                    <button
+                                        key={list.id}
+                                        onClick={() => {
+                                            updateTaskData(null, null, null, null, null, list.id);
+                                            setCurrentTaskListID(list.id);
+                                            setDropdownOpen(false);
+                                        }}
+                                        className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+                                    >
+                                        {list.name}
+                                    </button>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+
+                    <div className="flex items-center gap-2 flex-shrink-0">
+                        <div className="relative bg-gray-100 border border-gray-300 rounded" ref={priorityDropdownRef}>
+                            <button
+                                onClick={() => setPriorityDropdownOpen(!isPriorityDropdownOpen)}
+                                className="flex items-center justify-center gap-2 px-3 py-1 rounded hover:bg-gray-200 transition-colors"
+                            >
+                                <span className="text-sm text-center">{taskItem.priority}</span>
+                            </button>
+                            {isPriorityDropdownOpen && (
+                                <div className="absolute left-0 mt-2 w-32 bg-white border border-gray-200 rounded-lg shadow-lg">
+                                    {['Low', 'Medium', 'High'].map(priority => (
+                                        <button
+                                            key={priority}
+                                            onClick={() => {
+                                                updateTaskPriority(priority);
+                                                setPriorityDropdownOpen(false);
+                                            }}
+                                            className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-sm"
+                                        >
+                                            {priority}
+                                        </button>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                        <span className="relative bg-gray-100 border border-gray-300 rounded px-3 py-1 text-sm text-center">
+                            {new Date(taskItem.createdAt).toDateString()}
+                        </span>
+                    </div>
+                </div>
+
                 <div className="p-6">
                     <EditableText
                         value={taskItem.description || ""}
                         onSave={updateTaskDescription}
                         isMultiline={true}
                         showButtons={true}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                        className="min-w-[450px] px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                     />
                 </div>
+
                 <div className="flex justify-end gap-3 p-6 border-t border-gray-200">
-                    <button className="bg-white border-2 border-gray-800 rounded-lg px-4 py-2 cursor-pointer hover:bg-gray-200 transition-colors">
-                        Tags
-                    </button>
-                    <button className="bg-red-500 text-white border-2 border-red-600 rounded-lg px-4 py-2 cursor-pointer hover:bg-red-600 transition-colors">
+                    <button className="bg-red-500 text-white border-2 border-red-600 rounded-lg px-4 py-2 cursor-pointer hover:bg-red-600 transition-colors" 
+                        onClick={()=> onDeleteTask(taskItem.id)}> 
                         Delete
                     </button>
                 </div>

@@ -104,8 +104,8 @@ export function EditableText({ value, onSave, className = '', isMultiline = fals
     }
 
     return (
-        <span onDoubleClick={handleDoubleClick} className={className}>
+        <div onDoubleClick={handleDoubleClick} className={className}>
             {value}
-        </span>
+        </div>
     );
 }

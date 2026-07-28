@@ -85,7 +85,7 @@ function initializeDatabase(db) {
       name TEXT NOT NULL,
       description TEXT,
       completed INTEGER DEFAULT 0 NOT NULL,
-      priority TEXT CHECK(priority IN ('low', 'medium', 'high')) NOT NULL,
+      priority TEXT CHECK(priority IN ('Low', 'Medium', 'High')) NOT NULL,
       due_date TEXT,
       created_at TEXT NOT NULL,
       tags TEXT,

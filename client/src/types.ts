@@ -3,7 +3,7 @@ export interface Task {
   name: string;
   description?: string;
   completed: boolean;
-  priority: 'low' | 'medium' | 'high';
+  priority: 'Low' | 'Medium' | 'High';
   dueDate?: Date;
   createdAt: Date;
   tags?: string[];
