@@ -66,6 +66,11 @@ export function TaskModal({taskItem, show, onDataChanged, onHide, onDeleteTask}:
         updateTaskData(null, null, null, newPriority, null, null);
     }
 
+    const updateTaskList = (newListID: number) => {
+        updateTaskData(null, null, null, null, null, newListID);
+        setCurrentTaskListID(newListID);
+    }
+
     useEffect(() => {
         setCurrentTaskListID(taskItem.taskListID);
     }, [taskItem.taskListID]);
@@ -151,7 +156,7 @@ export function TaskModal({taskItem, show, onDataChanged, onHide, onDeleteTask}:
         }
 
         getAltTaskLists();
-    }, [currentTaskListID]);
+    }, [currentTaskListID, show]);
 
     if (!show) return null;
 
@@ -176,22 +181,19 @@ export function TaskModal({taskItem, show, onDataChanged, onHide, onDeleteTask}:
                 {/* Row 2: dropdown (left) + priority & date grouped (right) */}
                 <div className="flex justify-between items-center px-6 pb-6 border-b border-gray-200">
                     <div className="relative bg-gray-100 border border-gray-300 rounded" ref={dropdownRef}>
-                        {altTaskLists.length > 0 && (
                         <button
-                            onClick={() => { setDropdownOpen(!isDropdownOpen);}}
+                            onClick={() => { if(altTaskLists.length > 0) setDropdownOpen(!isDropdownOpen);}}
                             className="flex items-center justify-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors"
                         >
                             <span className="text-gray-700">{ownerListName}</span>
                         </button>
-                        )}
                         {isDropdownOpen && (
                             <div className="absolute left-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg">
                                 {altTaskLists.map(list => (
                                     <button
                                         key={list.id}
                                         onClick={() => {
-                                            updateTaskData(null, null, null, null, null, list.id);
-                                            setCurrentTaskListID(list.id);
+                                            updateTaskList(list.id);
                                             setDropdownOpen(false);
                                         }}
                                         className="block w-full text-left px-4 py-2 hover:bg-gray-100"

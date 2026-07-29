@@ -43,3 +43,22 @@ export async function ConstructUserFromToken (token: string): Promise<User | nul
 export function GetLocalToken() {
     return localStorage.getItem('authToken');
 }
+
+export function getTokenExpirationTime(token: string): number | null {
+    if (!token) return null;
+    
+    try {
+        const payload = jwtDecode<JwtUserPayload>(token);
+        const currentTime = Date.now() / 1000; // Convert to seconds
+        const timeUntilExpiry = payload.exp - currentTime;
+        
+        if (timeUntilExpiry <= 0) {
+            return 0; // Already expired
+        }
+        
+        return timeUntilExpiry * 1000; // Return milliseconds
+    } catch (error) {
+        console.error('Error decoding token:', error);
+        return null;
+    }
+}

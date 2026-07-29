@@ -23,7 +23,7 @@ export function TaskList({ taskList, onDataChanged, onDeleteTaskList }: TaskList
           "Content-Type": "application/json",
           "Authorization": `Bearer ${GetLocalToken()}`
         },
-        body: JSON.stringify({ task: { name: "New Task", description: "Add description...", priority: "Low" }, taskListID: taskList.id })
+        body: JSON.stringify({ task: { name: "New Task", description: "Add description...", priority: "low" }, taskListID: taskList.id })
       });
 
       if(postResult.ok) {
@@ -79,17 +79,21 @@ export function TaskList({ taskList, onDataChanged, onDeleteTaskList }: TaskList
 
   const getTasks = async () => {
     console.log("Getting tasks...");
-    const response = await fetch(`http://localhost:3001/api/tasks/?taskListID=${taskList.id}`, {
-        method: "GET",
-        headers: { "Authorization": `Bearer ${GetLocalToken()}`}
-    });
+    try {
+      const response = await fetch(`http://localhost:3001/api/tasks/?taskListID=${taskList.id}`, {
+          method: "GET",
+          headers: { "Authorization": `Bearer ${GetLocalToken()}`}
+      });
 
-    console.log("Server response:", response);
+      //console.log("Server response:", response);
 
-    if(response.ok) {
-      const data = await response.json();
+      const data = response.ok ? (await response.json()) : [];
       setTasks(data);
-      console.log("Final tasks:", data);
+      
+      console.log(`Final tasks for list - ${taskList.name}:`, data);
+    }
+    catch (error) {
+      console.log(`Unable to get tasks for list ${taskList.name}:`, error);
     }
   }
 

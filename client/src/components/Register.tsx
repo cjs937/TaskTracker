@@ -3,11 +3,11 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ConstructUserFromToken } from "../utils/tokenUtils"
 
-interface LoginProps {
+interface RegisterProps {
     onLogin: (token: string | null, user: User | null) => void;
 }
 
-export function Login({onLogin}: LoginProps) {
+export function Register({onLogin}: RegisterProps) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
@@ -15,7 +15,7 @@ export function Login({onLogin}: LoginProps) {
     const onFormSubmit = async (event: React.SubmitEvent) => {
         event.preventDefault();
         try{
-            const response = await fetch("http://localhost:3001/api/auth/login", {
+            const response = await fetch("http://localhost:3001/api/auth/register", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -33,10 +33,10 @@ export function Login({onLogin}: LoginProps) {
                 navigate("/dashboard");
             }
             else
-                alert(data.error || 'Invalid credentials');
+                alert(data.error || 'Use');
         }
         catch (error) {
-            console.error("Login error:", error);
+            console.error("Registration error:", error);
             alert("Failed to connect to server");
         }
     };
@@ -44,7 +44,7 @@ export function Login({onLogin}: LoginProps) {
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-100">
             <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-                <h1 className="text-3xl font-semibold text-gray-800 mb-6 text-center">Login</h1>
+                <h1 className="text-3xl font-semibold text-gray-800 mb-6 text-center">Register</h1>
                 <form onSubmit={onFormSubmit} className="flex flex-col gap-4">
                     <input 
                         type="text" 
@@ -67,13 +67,6 @@ export function Login({onLogin}: LoginProps) {
                         Submit
                     </button>
                 </form>
-                <button 
-                    type="submit"
-                    className="w-full bg-purple-600 text-white py-2 mt-4 rounded-lg hover:bg-purple-700 transition-colors font-medium"
-                    onClick={() => navigate("/register")}
-                >
-                    Register new account
-                </button>
             </div>
         </div>
     );

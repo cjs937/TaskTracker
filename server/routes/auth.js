@@ -64,7 +64,7 @@ router.post('/register', async (req, res) => {
         console.log("New user added:", outUser);
 
         const userToken = GenerateToken(userID, outUser.name, outUser.authority);
-        return res.status(201).json(userToken);
+        return res.status(201).json({authToken: userToken});
     }
     catch (err) {
         console.error("Error registering user: ", err);

@@ -1,13 +1,67 @@
 import { cache, useState, useEffect } from 'react'
 import type { User } from './types'
-import { BrowserRouter, Routes, Route, Navigate, data } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate, data, useNavigate } from 'react-router-dom'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import './App.css'
 import { Login } from './components/Login'
+import { Register } from "./components/Register"
 import { Dashboard } from './components/Dashboard'
 import { Project } from "./components/Project"
-import { ConstructUserFromToken } from "./utils/tokenUtils"
+import { ConstructUserFromToken, getTokenExpirationTime } from "./utils/tokenUtils"
 import { Header } from "./components/Header"
+
+function AppContent({ userToken, user, loading, handleSetUser }: { 
+  userToken: string | null, 
+  user: User | null, 
+  loading: boolean,
+  handleSetUser: (token: string | null, newUser: User | null) => void }) {
+  
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!userToken) return;
+
+    const timeUntilExpiry = getTokenExpirationTime(userToken);
+    
+    if (timeUntilExpiry === 0) {
+      // Token already expired
+      localStorage.removeItem('authToken');
+      handleSetUser(null, null);
+      navigate('/login');
+    } else if (timeUntilExpiry && timeUntilExpiry > 0) {
+      // Set timeout to redirect when token expires
+      const timeoutId = setTimeout(() => {
+        localStorage.removeItem('authToken');
+        handleSetUser(null, null);
+        navigate('/login');
+      }, timeUntilExpiry);
+
+      return () => clearTimeout(timeoutId);
+    }
+  }, [userToken, navigate, handleSetUser]);
+
+  return (
+    <>
+      {user && <Header user={user} onLogout={handleSetUser}/>}
+      <div className={user ? "pt-16" : ""}>
+        <Routes>
+          <Route path="/projects/:projectID" element={<Project />} />
+          <Route path="/register" element={<Register onLogin={handleSetUser}/>} />
+          <Route path="/login" element={ userToken ? <Navigate to="/dashboard" /> : 
+            <Login onLogin={handleSetUser} />} />
+
+          <Route path="/dashboard" element={loading ? <div>Loading...</div> :
+           user ? 
+            <Dashboard userToken={userToken} user={user}/> : 
+            <Navigate to='/login' />} />
+
+          <Route path="/" element={<Navigate to="/dashboard" />} />
+
+        </Routes>
+      </div>
+    </>
+  );
+}
 
 function App() {
 
@@ -54,22 +108,12 @@ function App() {
 
   return (
     <BrowserRouter>
-      {user && <Header user={user} onLogout={handleSetUser}/>}
-      <div className={user ? "pt-16" : ""}>
-        <Routes>
-          <Route path="/projects/:projectID" element={<Project />} />
-          <Route path="/login" element={ userToken ? <Navigate to="/dashboard" /> : 
-            <Login onLogin={handleSetUser} />} />
-
-          <Route path="/dashboard" element={loading ? <div>Loading...</div> :
-           user ? 
-            <Dashboard userToken={userToken} user={user}/> : 
-            <Navigate to='/login' />} />
-
-          <Route path="/" element={<Navigate to="/dashboard" />} />
-
-        </Routes>
-      </div>
+      <AppContent 
+        userToken={userToken} 
+        user={user} 
+        loading={loading} 
+        handleSetUser={handleSetUser} 
+      />
     </BrowserRouter>
   )
 }

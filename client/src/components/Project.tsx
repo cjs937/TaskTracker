@@ -48,8 +48,8 @@ export function Project()
             });
 
             if(postResult.ok) {
-                const newTaskList = await postResult.json();
-                setProject({...project, taskLists: [...project.taskLists, newTaskList]});
+                //const newTaskList = await postResult.json();
+                //setProject({...project, taskLists: [...(project.taskLists || []), newTaskList]});
                 loadProjectData();
             }
         }
@@ -90,7 +90,7 @@ export function Project()
             });
 
             if(deleteResult.ok) {
-                setProject({...project, taskLists: project.taskLists.filter(list => list.id !== taskListID)});
+                setProject({...project, taskLists: (project.taskLists || []).filter(list => list.id !== taskListID)});
                 loadProjectData();
             }
         }
@@ -121,9 +121,9 @@ export function Project()
                     headers: { "Authorization": `Bearer ${GetLocalToken()}`}
                 });
 
-                const taskListData = await taskListResponse.json();
+                const taskListData = taskListResponse.ok ? (await taskListResponse.json()) : [];
 
-                const proj = {...projectData, taskLists: taskListData || []};
+                const proj = {...projectData, taskLists: taskListData};//taskListData || []};
                 setProject(proj);
                 console.log("Final project:", proj);
         }

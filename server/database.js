@@ -34,6 +34,14 @@ function getDb() {
       console.log('Connected to SQLite database');
     }
   });
+  
+  // Enable foreign key constraints (required for ON DELETE CASCADE to work)
+  db.run("PRAGMA foreign_keys = ON", (err) => {
+    if (err) {
+      console.error('Error enabling foreign keys:', err.message);
+    }
+  });
+  
   return db;
 }
 

@@ -1,6 +1,5 @@
 import type { User as UserType } from "../types";
-import { Project } from "./Project";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { GetLocalToken } from "../utils/tokenUtils";
 import { useState, useEffect } from "react";
 
@@ -11,6 +10,7 @@ interface DashboardProps {
 
 export function Dashboard({user}:DashboardProps) {
     const navigate = useNavigate();
+    const location = useLocation();
     const [projects, setProjects] = useState(user.projects);
     const onProjClicked = (projectID: number) => {
         navigate(`/projects/${projectID}`);
@@ -40,28 +40,26 @@ export function Dashboard({user}:DashboardProps) {
 
     }
 
-    useEffect(() => {
-        const fetchProjects = async () => {
-            try {
-                const response = await fetch(`http://localhost:3001/api/projects/?userID=${user.id}`, {
-                    method: "GET",
-                    headers: {
-                        "Authorization": `Bearer ${GetLocalToken()}`
-                    }
-                });
-                
-                if(response.ok) {
-                    const data = await response.json();
-                    setProjects(data);
+    const fetchProjects = async () => {
+        try {
+            const response = await fetch(`http://localhost:3001/api/projects/?userID=${user.id}`, {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${GetLocalToken()}`
                 }
-                
-            } catch(error) {
-                console.error("Error fetching projects:", error);
-            }
-        };
-    
+            });    
+            
+            const data = response.ok ? (await response.json()) : [];
+            setProjects(data);
+            
+        } catch(error) {
+            console.error("Error fetching projects:", error);
+        }
+    };
+
+    useEffect(() => {
         fetchProjects();
-    }, [user.id]);
+    }, [user.id, location.key]);
 
     return (
         <div className="min-h-screen bg-gray-100 p-8">
@@ -79,7 +77,7 @@ export function Dashboard({user}:DashboardProps) {
                     ))}
                     <div className="bg-white border-2 border-gray-800 rounded-lg px-4 py-2 cursor-pointer hover:bg-gray-200 transition-colors"
                     onClick={addNewProject}>
-                        +
+                        + Add Project
                     </div>
                 </div>
             </div>
