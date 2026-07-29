@@ -2,9 +2,9 @@
 A full-stack task management app with projects, task lists, and tasks,
 Built to gain experience with React & Typescript, and explore client-server networking architecture.
 
-![Login Page](./screenshots/loginpage.png) 
-![Task List View](./screenshots/tasklists.png) 
-![Task Modal](./screenshots/taskmodal.png)
+![Login Page](screenshots/loginpage.PNG) 
+![Task List View](screenshots/taskLists.PNG) 
+![Task Modal](screenshots/taskModal.PNG)
 
 ## Tech Stack
 - Frontend: React, Tailwind
@@ -25,29 +25,25 @@ Because this is a learning project, it uses a local SQLite database. This would 
 - **Prepare for Build**: The project isn't quite ready to build for deployment. Some updates are needed to prepare it for this.
 
 ## Running Locally
-1 - Install dependencies
+**1. Install dependencies**
 Open the console at the root folder and run:
-
 ```bash
 npm run install:all
 ```
 
-2 - Create JWT secret
-
-Create a file in the server folder named .env. In that folder make an entry named [JWT_SECRET]
+**2. Create JWT secret**
+Create a file in the server folder named .env. In that folder make an entry named **JWT_SECRET**
 Then run:
 ```bash
 node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 ```
-Copy & paste that result as the value for [JWT_SECRET] 
-
+Copy & paste that result as the value for **JWT_SECRET**
 ```js
 JWT_SECRET=(Generated Value)
 ```
-If you want to change the default server port from 3001, make another entry named [PORT] and set it to the port of your choice.
+If you want to change the default server port from 3001, make another entry named **PORT** and set it to the port of your choice.
 
-3 - Start server and client
-
+**3. Start server and client**
 Starting from the root, open a terminal and run:
 ```bash
 cd server
@@ -58,8 +54,7 @@ Then open another terminal and run:
 cd client
 npm run dev
 ```
-Then you can either press (o + enter) in the client terminal or navigate to http://localhost:5173/ bring up a window with the website.
+Then you can either press (o + enter) in the client terminal or navigate to *http://localhost:5173/* to bring up a window with the website.
 
-4 - Make stuff
-
+**4. Make stuff**
 From here you can register an account and play around with the app! If you want to change any project & task related text fields, double click on them and they should allow editing. The database should be local in a file called "database.db" in the server file.
