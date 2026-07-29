@@ -23,7 +23,7 @@ export function TaskList({ taskList, onDataChanged, onDeleteTaskList }: TaskList
           "Content-Type": "application/json",
           "Authorization": `Bearer ${GetLocalToken()}`
         },
-        body: JSON.stringify({ task: { name: "New Task", description: "Add description...", priority: "low" }, taskListID: taskList.id })
+        body: JSON.stringify({ task: { name: "New Task", description: "Add description...", priority: "Low" }, taskListID: taskList.id })
       });
 
       if(postResult.ok) {
@@ -78,19 +78,14 @@ export function TaskList({ taskList, onDataChanged, onDeleteTaskList }: TaskList
   }
 
   const getTasks = async () => {
-    console.log("Getting tasks...");
     try {
       const response = await fetch(`http://localhost:3001/api/tasks/?taskListID=${taskList.id}`, {
           method: "GET",
           headers: { "Authorization": `Bearer ${GetLocalToken()}`}
       });
 
-      //console.log("Server response:", response);
-
       const data = response.ok ? (await response.json()) : [];
-      setTasks(data);
-      
-      console.log(`Final tasks for list - ${taskList.name}:`, data);
+      setTasks(data);      
     }
     catch (error) {
       console.log(`Unable to get tasks for list ${taskList.name}:`, error);

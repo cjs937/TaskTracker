@@ -1,6 +1,6 @@
-import { cache, useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import type { User } from './types'
-import { BrowserRouter, Routes, Route, Navigate, data, useNavigate } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import './App.css'
 import { Login } from './components/Login'

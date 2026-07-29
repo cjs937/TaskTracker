@@ -1,4 +1,3 @@
-import type { Project as ProjectType} from '../types';
 import { TaskList } from './TaskList';
 import { EditableText } from './EditableText';
 import { Search } from './Search';
@@ -13,8 +12,6 @@ export function Project()
     const [project, setProject] = useState(null);
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const navigate = useNavigate();
-
-    console.log("Loading project: ", projectID);
 
     const deleteProject = async () => {
         try {
@@ -101,7 +98,6 @@ export function Project()
     }
 
     const loadProjectData = async () => {
-        console.log("Refreshing project data. ProjID:", projectID);
         try {
                 if(!projectID) throw new Error("Invalid projectID");
                 const projectResult = await fetch(`http://localhost:3001/api/projects/${projectID}`, {
@@ -125,7 +121,6 @@ export function Project()
 
                 const proj = {...projectData, taskLists: taskListData};//taskListData || []};
                 setProject(proj);
-                console.log("Final project:", proj);
         }
         catch (error) {
                 console.error("Error loading project data:", error);

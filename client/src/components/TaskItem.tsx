@@ -1,8 +1,6 @@
 import type { Task } from '../types';
 import {TaskModal} from './TaskModal'
-import { EditableText } from './EditableText';
-import { useState, useEffect } from 'react';
-import { GetLocalToken } from '../utils/tokenUtils';
+import { useState } from 'react';
 
 interface TaskItemProps {
   task: Task;
@@ -12,27 +10,6 @@ interface TaskItemProps {
 
 export function TaskItem({ task, onDeleteTask, onDataChanged }: TaskItemProps) {
   const [isModalOpen, setModalOpen] = useState(false);
-
-  const updateTaskName = async (newName: string) => {
-    try {
-      const patchResult = await fetch(`http://localhost:3001/api/tasks/${task.id}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${GetLocalToken()}`
-        },
-        body: JSON.stringify({ name: newName })
-      });
-
-      if(patchResult.ok) {
-        onDataChanged();
-      }
-    }
-    catch(error) {
-      console.error("Error updating task name:", error);
-      alert("Server error");
-    }
-  }
 
   return (
     <>

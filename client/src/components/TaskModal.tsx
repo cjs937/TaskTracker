@@ -42,7 +42,6 @@ export function TaskModal({taskItem, show, onDataChanged, onHide, onDeleteTask}:
             });
 
             if(patchResult.ok) {
-                console.log("Task data patch successful");
                 onDataChanged();
             } else {
                 const errorData = await patchResult.json();
@@ -115,7 +114,6 @@ export function TaskModal({taskItem, show, onDataChanged, onHide, onDeleteTask}:
     useEffect(() => {
         const getAltTaskLists = async () => {
             try {
-                console.log("Getting alt task lists");
                 const taskListResult = await fetch(`http://localhost:3001/api/taskLists/${taskItem.taskListID}`, {
                     method: "GET",
                     headers: { "Authorization": `Bearer ${GetLocalToken()}`}
@@ -127,7 +125,6 @@ export function TaskModal({taskItem, show, onDataChanged, onHide, onDeleteTask}:
                     console.log("Error getting current task list:", resultData.error);
                     return;
                 }
-                console.log("Task list request results:", resultData);
                 const projectID = resultData.projectID;
 
                 const altListsResults = await fetch(`http://localhost:3001/api/taskLists/?projectID=${projectID}`, {
@@ -146,8 +143,6 @@ export function TaskModal({taskItem, show, onDataChanged, onHide, onDeleteTask}:
                 const ownerList = altLists.find(list => list.id === currentTaskListID);
                 if (ownerList) setOwnerName(ownerList.name);
                 setAltLists(altLists.filter(list => list.id !== currentTaskListID));
-
-                console.log("Alt lists:", altTaskLists);
             }
             catch(error) {
                 console.error("Error getting alternative task lists:", error);
@@ -211,10 +206,10 @@ export function TaskModal({taskItem, show, onDataChanged, onHide, onDeleteTask}:
                                 onClick={() => setPriorityDropdownOpen(!isPriorityDropdownOpen)}
                                 className="flex items-center justify-center gap-2 px-3 py-1 rounded hover:bg-gray-200 transition-colors"
                             >
-                                <span className="text-sm text-center">{taskItem.priority}</span>
+                                <span className="text-sm text-center">Priority: {taskItem.priority}</span>
                             </button>
                             {isPriorityDropdownOpen && (
-                                <div className="absolute left-0 mt-2 w-32 bg-white border border-gray-200 rounded-lg shadow-lg">
+                                <div className="absolute left-0 mt-2 w-32 bg-white border border-gray-200 rounded-lg shadow-lg"> 
                                     {['Low', 'Medium', 'High'].map(priority => (
                                         <button
                                             key={priority}
@@ -231,7 +226,7 @@ export function TaskModal({taskItem, show, onDataChanged, onHide, onDeleteTask}:
                             )}
                         </div>
                         <span className="relative bg-gray-100 border border-gray-300 rounded px-3 py-1 text-sm text-center">
-                            {new Date(taskItem.createdAt).toDateString()}
+                            Created: {new Date(taskItem.createdAt).toDateString()}
                         </span>
                     </div>
                 </div>
