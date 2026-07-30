@@ -14,7 +14,9 @@ Built to gain experience with React & Typescript, and explore client-server netw
 
 ## Architecture
 The data model follows a Users → Projects → Task Lists → Tasks hierarchy. This enables SQL's delete cascade behavior to clean up downstream data when their parents are deleted.
+
 The server has API request routes that represent each type in this hierarchy. This split keeps things decoupled and reduces clutter in their respective files. Server auth uses JWTs stored in localStorage for easy access. In the future tokens would probably be more secure as cookies instead.
+
 Because this is a learning project, it uses a local SQLite database. This would probably change to another more robust SQL engine if it were moved to production.
 
 ## Future Work
