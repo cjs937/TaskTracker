@@ -28,13 +28,15 @@ Because this is a learning project, it uses a local SQLite database. This would 
 
 ## Running Locally
 **1. Install dependencies**
+
 Open the console at the root folder and run:
 ```bash
 npm run install:all
 ```
 
 **2. Create JWT secret**
-Create a file in the server folder named .env. In that folder make an entry named **JWT_SECRET**
+
+Create a file in the server folder named .env. In that file, make an entry named **JWT_SECRET**
 Then run:
 ```bash
 node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
@@ -46,6 +48,7 @@ JWT_SECRET=(Generated Value)
 If you want to change the default server port from 3001, make another entry named **PORT** and set it to the port of your choice.
 
 **3. Start server and client**
+
 Starting from the root, open a terminal and run:
 ```bash
 cd server
@@ -59,4 +62,5 @@ npm run dev
 Then you can either press (o + enter) in the client terminal or navigate to *http://localhost:5173/* to bring up a window with the website.
 
 **4. Make stuff**
-From here you can register an account and play around with the app! If you want to change any project & task related text fields, double click on them and they should allow editing. The database should be local in a file called "database.db" in the server file.
+
+From here you can register an account and play around with the app! If you want to change any project & task related text fields, double click on them and they should allow editing. The database should be local to the server directory in a file called "database.db".
