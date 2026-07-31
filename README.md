@@ -1,5 +1,5 @@
 # TaskTracker
-A full-stack task management app with projects, task lists, and tasks,
+A full-stack task management app with projects, task lists, and tasks.
 Built to gain experience with React & Typescript, and explore client-server networking architecture.
 
 ![Login Page](screenshots/loginpage.PNG) 
@@ -21,9 +21,9 @@ Because this is a learning project, it uses a local SQLite database. This would 
 
 ## Future Work
 - **Task Tags**: Currently unimplemented, but data is there in TS and on the database. A fuller implementation would allow users to manage their tags per-project, assign those tags to tasks, and edit available tags in a separate tag manager modal.
-- **All Task Data**: There is also task data that's unrepresented on the site, but data is also set up for use. A fuller implementation would allow users to view and edit this data.
+- **All Task Data**: There is other task data that's unrepresented on the site, but data is also set up for use. A fuller implementation would allow users to view and edit this data.
 - **User Authority**: Users have authority data that is also unused. In the future I would authenticate certain API requests by checking the user's authority to perform these actions, block data from users of certain authority levels, and create an admin panel with additional admin-level features.
-- **Better Client Architecture**: The client architecture has some clunky logic that is harmed by the way it was structured. A lot of the [useEffects] and data refresh functions were added out of necessity as afterthoughts, and a lot of data is being requested from the server in places where it could have been cached. In the future the way data is passed through the app and updated visually should be planned out a bit more. 
+- **Better Client Architecture**: The client architecture has some clunky logic that is harmed by the way it was structured. A lot of the useEffects and data refresh functions were added out of necessity as afterthoughts, and a lot of data is being requested from the server in places where it could have been cached. If I were to make another app like this in the future the way data is passed through the app and updated visually would be planned out a lot more. 
 - **Prepare for Build**: The project isn't quite ready to build for deployment. Some updates are needed to prepare it for this.
 
 ## Running Locally
